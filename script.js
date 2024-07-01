@@ -1,11 +1,16 @@
 const form = document.getElementById("todo-form");
 const input = document.getElementById("input");
-const todoLane = document.getElementById("todo-box");
+const todoLane = document.querySelectorAll(".todo-box");
 const todoList = document.getElementById('todo-list');
 const allTodos = document.querySelectorAll('p');
-const ongoing = document.querySelector('.ongoing');
+const ongoing = document.querySelector('#ongoing');
+const progressTasks = document.querySelector('.ongoing');
 const done = document.querySelector('.done');
+const todo = document.querySelectorAll('.todo');
 let newTask;
+const todoTask = [];
+const proTask = [];
+const doneTask = [];
 loadTasks();
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -28,6 +33,7 @@ form.addEventListener("submit", (e) => {
   });
 
   todoList.appendChild(newTask);
+  todoTask.push(newTask);
   input.value = "";
   saveTasks();
 
@@ -42,6 +48,7 @@ draggables.forEach((task) => {
   task.addEventListener("dragend", () => {
     task.classList.remove("is-dragging");
   });
+  saveTasks();
 });
 
 droppables.forEach((zone) => {
@@ -50,7 +57,7 @@ droppables.forEach((zone) => {
 
     const bottomTask = insertAboveTask(zone, e.clientY);
     const curTask = document.querySelector(".is-dragging");
-
+    
     if (!bottomTask) {
       zone.appendChild(curTask);
     } else {
@@ -80,60 +87,92 @@ const insertAboveTask = (zone, mouseY) => {
 };
 
 
-
-// function saveTasks(){
-//     const openTasks = [];
-//     const progressTasks = [];
-//     const doneTasks = [];
-
-//    allTodos.forEach(item=>{
-//     openTasks.push(item.textContent);
-//    })
-//    openTasks.push(newTask.textContent);
-// //    console.log(openTasks);
-//    Array.from(done).forEach(item=>console.log(item))
-
-//    localStorage.setItem('openTasks',JSON.stringify(openTasks));
-
-// }
-
 function saveTasks() {
     const openTasks = [];
-    const tasks = todoList.querySelectorAll('.todo');
-    
-    tasks.forEach(item => {
+    const progTasks = [];
+    const doneTasks = [];
+  
+    document.querySelectorAll('#todo-list .todo').forEach(item => {
       openTasks.push(item.textContent);
     });
-   console.log(ongoing);
-   
+  
+    document.querySelectorAll('#ongoing .todo').forEach(item => {
+      progTasks.push(item.textContent);
+    });
+  
+    document.querySelectorAll('#done .todo').forEach(item => {
+      doneTasks.push(item.textContent);
+    });
+  
     localStorage.setItem('openTasks', JSON.stringify(openTasks));
+    localStorage.setItem('progTasks', JSON.stringify(progTasks));
+    localStorage.setItem('doneTasks', JSON.stringify(doneTasks));
+  }
+  
+  function loadTasks() {
+    const openTasks = JSON.parse(localStorage.getItem('openTasks')) || [];
+    const progTasks = JSON.parse(localStorage.getItem('progTasks')) || [];
+    const doneTasks = JSON.parse(localStorage.getItem('doneTasks')) || [];
+  
+    openTasks.forEach((item) => {
+      const loadedP = document.createElement('p');
+      loadedP.textContent = item;
+      loadedP.classList.add("todo");
+      loadedP.setAttribute("draggable", "true");
+      todoList.appendChild(loadedP);
+  
+      loadedP.addEventListener("dragstart", () => {
+        loadedP.classList.add("is-dragging");
+        document.querySelector('#ongoing').appendChild(loadedP);
+      });
+  
+      loadedP.addEventListener("dragend", () => {
+        loadedP.classList.remove("is-dragging");
+      });
+  
+     
+    });
+
+   
+  
+    progTasks.forEach((item) => {
+      const loadedP = document.createElement('p');
+      loadedP.textContent = item;
+      loadedP.classList.add("todo");
+      loadedP.setAttribute("draggable", "true");
+  
+      loadedP.addEventListener("dragstart", () => {
+        loadedP.classList.add("is-dragging");
+      });
+  
+      loadedP.addEventListener("dragend", () => {
+        loadedP.classList.remove("is-dragging");
+      });
+  
+      ongoing.appendChild(loadedP);
+    });
+  
+    doneTasks.forEach((item) => {
+      const loadedP = document.createElement('p');
+      loadedP.textContent = item;
+      loadedP.classList.add("todo");
+      loadedP.setAttribute("draggable", "true");
+  
+      loadedP.addEventListener("dragstart", () => {
+        loadedP.classList.add("is-dragging");
+      });
+  
+      loadedP.addEventListener("dragend", () => {
+        loadedP.classList.remove("is-dragging");
+      });
+  
+      done.appendChild(loadedP);
+    });
   }
 
-function loadTasks(){
-    const loadedTasks = JSON.parse(localStorage.getItem('openTasks')) || [];
-
-//    console.log(loadedTasks);
-   loadedTasks.forEach((item)=>{
-    const loadedP = document.createElement('p');
-    loadedP.textContent=item;
-   
-    loadedP.classList.add("todo");
-  loadedP.setAttribute("draggable", "true");
- 
-
-  loadedP.addEventListener("dragstart", () => {
-    loadedP.classList.add("is-dragging");
-  });
-
-  loadedP.addEventListener("dragend", () => {
-    loadedP.classList.remove("is-dragging");
-  });
-
-  todoList.appendChild(loadedP);
 
 
-   })
-}
+
 
 
 
