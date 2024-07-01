@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+    <div class="main">
+        <form id="todo-form">
+            <input type="text" placeholder="Enter Todo.." id="input">
+            <button type="submit" id="add-btn">Add +</button>
+        </form>
+        <div class="boxes">
+            <div id="todo-list" class="todo-box todo-list">
+                <h2>Open</h2>
+                <p class="todo" draggable="true">Pushups</p>
+            </div>
+            <div class="todo-box ongoing" id="ongoing">
+                <h2>In-progress</h2>
+                <p class="todo" draggable="true">Walking</p>
+            </div>
+            <div class="todo-box done" id="done">
+                <h2>Done</h2>
+                <p class="todo" draggable="true">HomeWork</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
